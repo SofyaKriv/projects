@@ -1,0 +1,3 @@
+user3 = User.objects.create(username='Three')
+author3 = Author.objects.create(user=user3)
+Post.objects.create(author=author3, category_type='N', title_post='Какой дурак это придумал?', text_post='Я')

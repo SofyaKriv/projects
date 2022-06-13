@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+{% block form %}
+    <h3>
+    Создание новой комнаты
+    </h3>
+    <form id="create-form" class="form-group">
+        {% csrf_token %}
+        <div class="row">
+            <div class="input-field col s12">
+                <input name="roomname" id="id_roomname" type="text" class="validate">
+                <label for="id_roomname">Название комнаты</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="right">
+                    <button class="btn blue waves-effect waves-light pull-s12">Создать комнату</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+    function createRoom(roomname) {
+        $.post('/api/rooms/', '{"room_name": "' + roomname + '"}',
+            function (data) {
+                console.log(data);
+                window.location = '/';
+            }).fail(function (response) {
+                $('#id_roomname').addClass('invalid');
+            })
+    }
+
+    $(function () {
+        $('#create-form').on('submit', function (event) {
+            event.preventDefault();
+            var room_name = $('#id_roomname').val();
+            if(room_name !== '')
+            {
+                createRoom(room_name);
+            }
+            else
+                alert("Пожалуйста, введите корректное название!");
+        })
+    })
+    </script>
+{% endblock %}

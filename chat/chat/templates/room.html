@@ -1,0 +1,74 @@
+{% extends 'default.html' %}
+
+<body>
+{% block body %}
+<!--    <div class="card">-->
+<!--            <div id="chat-log" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">-->
+<!--&lt;!&ndash;                <textarea id="chat-log" cols="100" rows="20"></textarea><br>&ndash;&gt;-->
+<!--            </div>-->
+<!--    </div>-->
+<!--    <form id="chat-box" class="form-group {% block hide %}hide{% endblock %}" method="post">-->
+<!--        <div class="row">-->
+<!--            <div class="col s11">-->
+<!--                <div class="input-field">-->
+<!--&lt;!&ndash;                    <input id="chat-message-input" name="message" type="text" placeholder="Напишите свое сообщение..">&ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col s1" style="line-height: 80px">-->
+<!--&lt;!&ndash;                <input type="button" id="chat-message-submit" style="background: #a8d8ff">Отправить&ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </form>-->
+    <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
+        {% block messages %}
+
+        {% endblock %}
+    </div>
+    <div class="col s11">
+        <div class="input-field">
+            <input id="chat-message-input" type="text" size="100">
+        </div>
+    </div>
+    <div class="col s1" style="line-height: 80px">
+        <input id="chat-message-submit" type="button" style="background: #a8d8ff" value="Отправить">
+    </div>
+    {{ id_roomname|json_script:"id_roomname" }}
+    <script>
+        function isOpen(ws) { return ws.readyState === ws.OPEN }
+
+        const roomName = JSON.parse(document.getElementById('id_roomname').textContent);
+        let url = location.host == 'localhost' ?
+          'ws://localhost:8080/ws' : location.host == 'javascript.local' ?
+          'ws://javascript.local/article/websocket/chat/ws' :
+          'wss://javascript.info/article/websocket/chat/ws';
+        const chatSocket = new WebSocket(url);
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+
+            document.querySelector('#chat-log').value += (data.message + '\n');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            if (!isOpen(chatSocket)) return;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        };
+    </script>
+</body>
+{% endblock body %}

@@ -1,0 +1,25 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Adverts
+{% endblock title %}
+
+{% block content %}
+    <h3>{{ time_now|date:'d-M-Y h:m' }}</h3>
+    <hr>
+    <table>
+        <tr>
+            {{ advertsdetail|safe }}
+        </tr>
+    </table>
+    <hr>
+    <p>Комментарии</p>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Добавить комментарий">
+    </form>
+    {% for comment in comments %}
+        <p>{{ comment }}</p>
+    {% endfor %}
+{% endblock content %}

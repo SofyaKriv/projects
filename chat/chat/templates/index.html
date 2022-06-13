@@ -1,0 +1,46 @@
+{% extends 'default.html' %}
+{% load static %}
+    <body>
+    {% block body %}
+        <div class="container">
+            <div class="row">
+            <div class="col s12 m8 l6 offset-m2 offset-l3">
+                <div class="section center-block">
+                <div>
+                    {% block form %}
+                    <h3>
+                    Вход
+                    </h3>
+                    <form id="login-form" class="form-group" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input name="username" id="id_username" type="text">
+                                <label for="id_username">Имя пользователя</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input name="password" id="id_password" type="password">
+                                <label for="id_password">Пароль</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s8">
+                                <a href="{% url 'register' %}">Регистрация</a>
+                            </div>
+                            <div class="col s4">
+                                <div class="right">
+                                    <button class="btn blue waves-effect waves-light pull-s12">Войти</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {% endblock %}
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+        {% endblock %}
+    </body>

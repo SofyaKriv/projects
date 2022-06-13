@@ -1,0 +1,41 @@
+{% extends 'flatpages/default.html' %}
+ 
+{% block title %} Posts list {% endblock title %}
+ 
+{% block content %}
+<h2>Вы действительно хотите удалить данное объявление?</h2>
+<table>
+    <thead>
+        <th>
+            Автор
+        </th>
+        <th>
+            Название
+        </th>
+        <th>
+            Категория
+        </th>
+        <th>
+            Текст
+        </th>
+    </thead>
+    <tr>
+        <td>
+            {{ advertsdetail.fan.user }}
+        </td>
+        <td>
+            {{ advertsdetail.title_post }}
+        </td>
+        <td>
+            {{ advertsdetail.category.theme }}
+        </td>
+        <td>
+            {{ advertsdetail.text_post }}
+        </td>
+    </tr>
+</table>
+ 
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="подтвердить"></form>
+{% endblock content %} 

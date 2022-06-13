@@ -1,0 +1,11 @@
+<!--  наследуемся от шаблона default.html, который мы создавали ещё во времена flatpages -->
+{% extends 'flatpages/default.html' %}
+
+{% load static %}
+<h1>{{flatpage.title}}</h1>
+<hr>
+<link href="{% static 'css/about.css' %}" rel="stylesheet">
+{% block content %}
+<img src="{% static 'images/1.jpeg' %}" width="500" height="500" alt="My image">
+<p style="font-family: cursive; font-weight: 400; font-stretch: condensed;">{{ flatpage.content }}</p>
+{% endblock content %}

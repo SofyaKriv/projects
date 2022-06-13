@@ -1,0 +1,95 @@
+
+{% extends 'flatpages/default.html' %}
+
+{% load my_filter %}
+
+
+
+{% block title %}
+News
+{% endblock title %}
+
+
+{% block content %}
+{% if is_not_author %}
+    <a href="accounts/upgrade/">Стать автором!</a>
+{% endif %}
+<style type="text/css">
+        table{
+            width: 1200px;
+            border-collapse: collapse;
+            border: 2px solid white;
+        }
+        td{
+            padding: 3px;
+            border: 1px solid;
+            text-align: left;
+        }
+</style>
+    <h1>Новости</h1>
+    <h3>{{ time_now|date:'d M Y' }}</h3> <!-- Здесь мы применяем фильтр date. Он очень похож на метод strftime у даты. С его помощью мы можем выводить дату в нужном нам формате -->
+    <hr>
+    <h3> Количество новостей: {{ news|length }} </h3>
+    {% if news %} <!-- Выводим товары только, если они есть с помощью тега if -->
+        <table>
+            <tr bgcolor="#C0C0C0">
+                <td>
+                    Название
+                </td>
+                <td>
+                    Текст
+                </td>
+                <td>
+                    Тип записи
+                </td>
+                <td>
+                    Категория
+                </td>
+            </tr>
+        {% for newsdetail in news %} <!-- Для каждого товара будете генерироваться новая строчка, т. е. новый html-код. При этом сам цикл работает точно также, как и в Python. product — переменная цикла, т. е. наш товар, взятый из общего списка -->
+            <tr>
+                <td>
+                    <a href="{% url 'newsdetail' newsdetail.id %}">{{ newsdetail.title_post|Censor }}</a> <!-- не забываем, что переменные в шаблоне ничем не отличаются от переменных в Python. Здесь также можно получать доступ к полям класса. Например, здесь мы выводим имя, в следующем столбце описание, и т. д.  -->
+                    <a href="{% url 'post_update' newsdetail.id %}"><u>Редактировать</u></a> <!-- добавим ссылку на редактирование товара-->
+                    <a href="{% url 'post_delete' newsdetail.id %}"><u> Удалить </u></a> <!-- добавим ссылку на удаление товара-->
+                </td>
+                <td>
+                    {{ newsdetail.text_post|truncatechars:20|Censor }}
+                </td>
+                <td>
+                    {{ newsdetail.category_type }}
+                </td>
+                <td>
+                    {% for c in newsdetail.category.all%}
+                        {{ c.theme }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %} <!-- Если товаров нет, то говорим, что товаров нет ;) -->
+        <h2>Новостей нет!</h2>
+    {% endif %}
+<a href="{% url 'post_create' %}">Добавить новую запись</a> <br>
+{% if is_paginated %}
+
+    {% if page_obj.has_previous %}
+        <a href="?page=1">Начало</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Конец</a>
+    {% endif %}
+
+{% endif %}
+{% endblock content %}

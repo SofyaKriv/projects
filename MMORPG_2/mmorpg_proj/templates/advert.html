@@ -1,0 +1,83 @@
+
+{% extends 'flatpages/default.html' %}
+
+
+{% block title %}
+Adverts
+{% endblock title %}
+
+
+{% block content %}
+<style type="text/css">
+        table{
+            width: 1200px;
+            border-collapse: collapse;
+            border: 2px solid white;
+        }
+        td{
+            padding: 3px;
+            border: 1px solid;
+            text-align: left;
+        }
+</style>
+    <h1>Объявления</h1>
+    <h3>{{ time_now|date:'d M Y' }}</h3>
+    <hr>
+    <h3> Количество объявлений: {{ advert|length }} </h3>
+    {% if advert %}
+        <table>
+            <tr bgcolor="#C0C0C0">
+                <td>
+                    Название
+                </td>
+                <td>
+                    Текст
+                </td>
+                <td>
+                    Категория
+                </td>
+            </tr>
+        {% for advertsdetail in advert %}
+          <tr>
+                <td>
+                    <a href="{% url 'advertsdetail' advertsdetail.id %}">{{ advertsdetail.title_post }}</a>
+                    <a href="{% url 'post_update' advertsdetail.id %}"><u>Редактировать</u></a>
+                    <a href="{% url 'post_delete' advertsdetail.id %}"><u> Удалить </u></a>
+                </td>
+                <td>
+                    {{ advertsdetail.text_post|truncatechars:20|safe }}
+                </td>
+                <td>
+                    {% for c in advertsdetail.category.all%}
+                        {{ c.theme }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <h2>Объявлений нет!</h2>
+    {% endif %}
+<a href="{% url 'post_create' %}">Добавить новое объявление</a> <br>
+{% if is_paginated %}
+
+    {% if page_obj.has_previous %}
+        <a href="?page=1">Начало</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Конец</a>
+    {% endif %}
+
+{% endif %}
+{% endblock content %}

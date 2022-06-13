@@ -1,0 +1,46 @@
+
+{% extends 'flatpages/default.html' %}
+
+{% load my_filter %}
+
+{% block title %}
+Categorys
+{% endblock title %}
+
+
+{% block content %}
+<h1>Категории</h1>
+    {% if categorys %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>
+                    Категория
+                </th>
+                <th>
+                    Подписка
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+        {% for category in categorys %}
+            <tr>
+                <td class="text-center">
+                    {{ category.theme }}
+                </td>
+                <td>
+                    {% if category in user.category_set.all %}
+                        <a href="unsubscribe/{{ category.id }}" class="btn btn-danger btn-sm">Отписаться</a>
+                    {% else %}
+                        <a href="subscribe/{{ category.id }}" class="btn btn-success btn-sm">Подписаться</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    {% else %}
+        <h2>категорий нет!</h2>
+    {% endif %}
+
+{% endblock content %}

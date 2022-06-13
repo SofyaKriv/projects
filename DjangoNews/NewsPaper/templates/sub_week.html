@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <tr>
+        <td>
+            Название
+        </td>
+        <td>
+            Автор
+        </td>
+    </tr>
+    {% for post in news %}
+        <tr>
+            <td>
+                <a href="http://127.0.0.1:8000/news/{{post.id}}">{{ post.title_post }}</a> <!-- не забываем, что переменные в шаблоне ничем не отличаются от переменных в Python. Здесь также можно получать доступ к полям класса. Например, здесь мы выводим имя, в следующем столбце описание, и т. д.  -->
+            </td>
+            <td>
+                {{ post.author.user }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

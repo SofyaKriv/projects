@@ -1,0 +1,46 @@
+
+{% extends 'default.html' %}
+
+<!--{% block title %}-->
+<!--Rooms-->
+<!--{% endblock title %}-->
+
+{% block body %}
+
+    <h3 style="text-align:center">
+    Комнаты
+    </h3>
+    {% if rooms %}
+        <table>
+            <thead>
+            <tr>
+                <th style="text-align: center">
+                    Комната
+                </th>
+                <th style="text-align: center">
+                    Подписка
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+        {% for room in rooms %}
+            <tr>
+                <td style="text-align: center">
+                    <a href="{% url 'room_detail' room.id %}">{{ room.room_name }}</a>
+                </td>
+                <td style="text-align: center">
+                    {% if room in request.user.room_set.all %}
+                        <a href="unsubscribe/{{ room.id }}">Отписаться</a>
+                    {% else %}
+                        <a href="subscribe/{{ room.id }}">Подписаться</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    {% else %}
+        <h2>Комнат нет!</h2>
+    {% endif %}
+    <button class="btn blue waves-effect waves-light pull-s12" style="margin:auto;display:block;"><a href="{% url 'room_create' %}" style="color: white">Создать комнату</a></button>
+{% endblock body %}

@@ -1,0 +1,16 @@
+<!--  наследуемся от шаблона default.html, который мы создавали ещё во времена flatpages -->
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+    <h3>{{ time_now|date:'d-M-Y h:m' }}</h3>
+    <hr>
+    <table>
+        <tr>
+            {{ newsdetail }}
+        </tr>
+    </table>
+{% endblock content %}

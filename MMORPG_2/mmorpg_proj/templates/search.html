@@ -1,0 +1,74 @@
+
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<style type="text/css">
+        table{
+            width: 1000px;
+            border-collapse: collapse;
+            border: 2px solid white;
+        }
+
+        td{
+            padding: 3px;
+            border: 1px solid;
+            text-align: left;
+        }
+</style>
+<hr>
+<h1>Фильтр комментариев</h1>
+
+<form method="GET">
+    {{ filter.form }}
+    <input type="submit" value="Найти">
+</form>
+{% if search %}
+    <table>
+        <tr bgcolor="#C0C0C0">
+            <td>
+                Автор
+            </td>
+            <td>
+                Объявление
+            </td>
+            <td>
+                Текст
+            </td>
+            <td>
+                Дата публикации
+            </td>
+        </tr>
+        {% for comment in filter.qs %}
+        <tr>
+            <td>{{ comment.fan }}</td>
+            <td>{{ comment.post }}</td>
+            <td>{{ comment.text }}</td>
+            <td>{{ comment.create_date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2>Новостей нет!</h2>
+{% endif %}
+{% if is_paginated %}
+
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+{% endif %}
+{% endblock content %}
